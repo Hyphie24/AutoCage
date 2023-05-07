@@ -130,18 +130,16 @@ function AutoCage_HandleAutoCaging(petToCageID)
 	end
 
 	for index = 1, owned do -- Loop every pet owned (unowned will be over the offset).
-		local pGuid, pBattlePetID, _, pNickname, pLevel, pIsFav, _, pName, _, _, _, _, _, _, _, pIsTradeable = C_PetJournal.GetPetInfoByIndex(index);
-
-		if petToCageID == nil or petToCageID == pBattlePetID then
-			if petCache[pBattlePetID] == true then
-				if pLevel == 1 and not pIsFav and pIsTradeable then
-					AutoCage_Message(pName .. " :: " .. AutoCage_GetLocalizedString(L_AUTOCAGE_CAGED_MESSAGE));
-					table.insert(petsToCage, pGuid);
-				end
-			else
-				petCache[pBattlePetID] = true;
-			end
-		end
+		local petID, speciesID, _, _, level, isFav, _, speciesName, _, _, _, _, _, _, _, isTradeable = C_PetJournal.GetPetInfoByIndex(index);
+		
+		 if petCache[speciesID] == true then
+                if level == 1 and not isFav and isTradeable then
+                    print(string.format("%s - Level %d", speciesName, level))
+                    C_PetJournal.CagePetByID(petID)
+                end
+            else
+                petCache[speciesID] = true;
+            end
 	end
 end
 
