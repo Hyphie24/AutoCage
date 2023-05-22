@@ -121,26 +121,24 @@ function AutoCage_HandleAutoCaging(petToCageID)
 	C_PetJournal.ClearSearchFilter(); -- Clear filter so we have a full pet list.
 	C_PetJournal.SetPetSortParameter(LE_SORT_BY_LEVEL); -- Sort by level, ensuring higher level pets are encountered first.
 
-	local total, owned = C_PetJournal.GetNumPets();
-	local petCache = {};
-	petsToCage = {};
-
-	if petToCageID ~= nil then
-		petToCageID = tonumber(petToCageID);
-	end
-
-	for index = 1, owned do -- Loop every pet owned (unowned will be over the offset).
-		local petID, speciesID, _, _, level, isFav, _, speciesName, _, _, _, _, _, _, _, isTradeable = C_PetJournal.GetPetInfoByIndex(index);
-		
-		 if petCache[speciesID] == true then
-                if level == 1 and not isFav and isTradeable then
+		local _, owned = C_PetJournal.GetNumPets();
+        local petCache = {};
+        
+        for index = 1, owned do
+            local petID, speciesID, _, _, level, isFav, _, speciesName, _, _, _, _, _, _, _, isTradeable = C_PetJournal.GetPetInfoByIndex(index);
+            
+            if petCache[speciesID] == true then
+            if isTradeable and not isFav then
                     print(string.format("%s - Level %d", speciesName, level))
                     C_PetJournal.CagePetByID(petID)
                 end
             else
                 petCache[speciesID] = true;
             end
-	end
+        end
+        print("Caging finished.")
+        return false 
+    
 end
 
 --[[
